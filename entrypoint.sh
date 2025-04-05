@@ -11,6 +11,6 @@ chmod -R 775 /var/www/storage
 chmod -R 775 /var/www/bootstrap/cache
 
 
-php artisan migrate
+php artisan migrate  --seed
 
 php artisan serve --host=0.0.0.0 --port=8000

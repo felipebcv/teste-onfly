@@ -12,13 +12,31 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('travel_orders', function (Blueprint $table) {
-            $table->bigIncrements('id'); // ID do pedido (auto-increment)
-            $table->string('solicitante'); // Nome do solicitante
-            $table->string('destino');     // Destino da viagem
-            $table->date('data_ida');      // Data de ida
-            $table->date('data_volta');    // Data de volta
-            $table->enum('status', ['solicitado', 'aprovado', 'cancelado'])->default('solicitado');
-            $table->timestamps();          // created_at e updated_at
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->comment('Foreign key referencing clients');
+            $table->unsignedBigInteger('destination_id')->comment('Foreign key referencing destinations');
+            $table->date('departure_date')->comment('Date of departure');
+            $table->date('return_date')->comment('Date of return');
+            $table->unsignedBigInteger('status_id')->comment('Foreign key referencing travel_order_statuses; default is 1 (requested)');
+            $table->timestamps();
+
+            $table->foreign('user_id')
+                  ->references('id')
+                  ->on('users')
+                  ->onDelete('restrict')
+                  ->comment('FK to clients table');
+
+            $table->foreign('destination_id')
+                  ->references('id')
+                  ->on('destinations')
+                  ->onDelete('restrict')
+                  ->comment('FK to destinations table');
+
+            $table->foreign('status_id')
+                  ->references('id')
+                  ->on('travel_order_statuses')
+                  ->onDelete('restrict')
+                  ->comment('FK to travel_order_statuses table');
         });
     }
 

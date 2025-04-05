@@ -1,0 +1,208 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Travel Orders API",
+        "description": "API for managing travel orders",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Authenticate user and generate API token",
+                "operationId": "222b2625838e3c57e017987f73598fda",
+                "requestBody": {
+                    "description": "User credentials",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "test@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "secret"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Authentication successful",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|pPOn8gH3..."
+                                        },
+                                        "user": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Invalid credentials"
+                    }
+                }
+            }
+        },
+        "/api/travel-orders": {
+            "post": {
+                "tags": [
+                    "TravelOrders"
+                ],
+                "summary": "Create a new travel order",
+                "operationId": "createTravelOrder",
+                "requestBody": {
+                    "description": "Travel order data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "destination_id",
+                                    "departure_date",
+                                    "return_date"
+                                ],
+                                "properties": {
+                                    "destination_id": {
+                                        "description": "ID of the destination",
+                                        "type": "integer",
+                                        "example": 3
+                                    },
+                                    "departure_date": {
+                                        "description": "Date of departure",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-05-01"
+                                    },
+                                    "return_date": {
+                                        "description": "Date of return",
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2025-05-10"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Travel order created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/TravelOrder"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "TravelOrder": {
+                "title": "Travel Order",
+                "required": [
+                    "id",
+                    "user_id",
+                    "destination_id",
+                    "departure_date",
+                    "return_date",
+                    "status_id"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "user_id": {
+                        "description": "ID of the client",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "destination_id": {
+                        "description": "ID of the destination",
+                        "type": "integer",
+                        "example": 3
+                    },
+                    "departure_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-05-01"
+                    },
+                    "return_date": {
+                        "type": "string",
+                        "format": "date",
+                        "example": "2025-05-10"
+                    },
+                    "status_id": {
+                        "description": "Status ID (1 for requested)",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-05T15:00:00Z"
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-04-05T15:00:00Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "http",
+                "bearerFormat": "Bearer",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Authentication",
+            "description": "Authentication"
+        },
+        {
+            "name": "TravelOrders",
+            "description": "TravelOrders"
+        }
+    ]
+}
