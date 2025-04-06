@@ -64,6 +64,7 @@ class TravelOrderController extends Controller
     {
         $data = $request->validated();
         $travelOrder = $this->travelOrderService->createTravelOrder($data);
+        
         return response()->json($travelOrder, 201);
     }
 
