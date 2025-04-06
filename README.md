@@ -66,8 +66,8 @@ A API foi construída com **Laravel 11**, utilizando uma arquitetura limpa basea
 1. Clone o repositório e acesse a pasta raiz:
 
    ```bash
-   git clone <repo-url>
-   cd nome-do-projeto
+   git clone git@github.com:felipebcv/teste-onfly.git
+   cd teste-onfly
    ```
 
 2. Suba os containers:
