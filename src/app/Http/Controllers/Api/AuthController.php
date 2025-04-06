@@ -3,14 +3,21 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use App\Http\Requests\LoginRequest;
+use App\Interfaces\Services\AuthServiceInterface;
 
 
 
 class AuthController extends Controller
 {
+    protected $authService;
+
+    public function __construct(AuthServiceInterface $authService)
+    {
+        $this->authService = $authService;
+    }
+
+
     /**
      * @OA\Post(
      *     path="/api/login",
@@ -36,24 +43,15 @@ class AuthController extends Controller
      *     @OA\Response(response=401, description="Invalid credentials"),
      * )
      */
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
-        // Validação das credenciais
-        $credentials = $request->validate([
-            'email'    => 'required|email',
-            'password' => 'required'
-        ]);
+        $data = $request->validated();
 
-        // Busca o usuário pelo email
-        $user = User::where('email', $credentials['email'])->first();
+        $token = $this->authService->login($data['email'], $data['password']);
 
-        // Verifica se o usuário existe e se a senha confere
-        if (!$user || !Hash::check($credentials['password'], $user->password)) {
+        if (!$token) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
-
-        // Cria o token usando Sanctum
-        $token = $user->createToken('API Token')->plainTextToken;
 
         return response()->json([
             'token' => $token

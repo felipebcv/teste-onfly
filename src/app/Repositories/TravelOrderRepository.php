@@ -12,4 +12,16 @@ class TravelOrderRepository implements TravelOrderRepositoryInterface
         return TravelOrder::create($data);
     }
 
+    public function update(TravelOrder $travelOrder, array $data): TravelOrder
+    {
+        $travelOrder->fill($data);
+        $travelOrder->save();
+        return $travelOrder;
+    }
+
+    public function findTravelOrder(int $id): ?TravelOrder
+    {
+        return TravelOrder::where('id', $id)->first();
+    }
+
 }
